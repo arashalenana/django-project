@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vehicle App</title>
+</head>
+
+<body>
+
+    <h1>Vehicle List</h1>
+
+    {% for vehicle in vehicles %}
+
+    <h2>{{ vehicle.name }}</h2>
+
+    <p>Brand: {{ vehicle.brand }}</p>
+    <p>Year: {{ vehicle.year }}</p>
+    <p>Price: {{ vehicle.price }}</p>
+
+    <hr>
+
+    {% empty %}
+
+    <p>No vehicles available</p>
+
+    {% endfor %}
+
+</body>
+
+</html>
