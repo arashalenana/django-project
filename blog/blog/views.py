@@ -18,6 +18,11 @@ class BlogListView(ListView):
 class BlogDetailView(DetailView):
     model=Post
     template_name='post_detail.html'
+    def get_context_data(self,**kwargs):
+        context=super().get_context_data(**kwargs)
+        context['user']=self.request.user
+        print(context['user'])
+        return context
 class BlogCreateView(CreateView):
     model=Post
     template_name='post_new.html'
