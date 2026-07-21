@@ -42,10 +42,11 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'accounts',
-    'pages'
+    'pages',
+    'articles'
 ]
 
-
+TIME_ZONE = 'Africa/Nairobi'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
