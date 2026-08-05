@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}BuyNest - Shop Online{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Everything you need, delivered.</h1>
+    <p>Shop quality products at fair prices, with cash-on-delivery checkout.</p>
+    <a href="{% url 'products:list' %}" class="btn btn-primary">Shop Now</a>
+</section>
+
+<section class="section">
+    <h2>Categories</h2>
+    <div class="grid grid-categories">
+        {% for category in categories %}
+            <a href="{{ category.get_absolute_url }}" class="category-card">
+                <h3>{{ category.name }}</h3>
+            </a>
+        {% empty %}
+            <p>No categories yet. Add some in the admin panel.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section">
+    <h2>Featured Products</h2>
+    <div class="grid grid-products">
+        {% for product in featured_products %}
+            <div class="product-card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="product-image-placeholder">No image</div>
+                {% endif %}
+                <h3>{{ product.name }}</h3>
+                <p class="price">KSh {{ product.display_price }}</p>
+                <a href="{{ product.get_absolute_url }}" class="btn btn-secondary">View</a>
+            </div>
+        {% empty %}
+            <p>No products yet. Add some in the admin panel.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section promo">
+    <h2>Why shop with us?</h2>
+    <div class="grid grid-benefits">
+        <div class="benefit-card"><h3>Fast Delivery</h3><p>Get your orders quickly, wherever you are.</p></div>
+        <div class="benefit-card"><h3>Secure Checkout</h3><p>Your information is handled safely.</p></div>
+        <div class="benefit-card"><h3>Quality Products</h3><p>Carefully selected items you can trust.</p></div>
+    </div>
+</section>
+{% endblock %}

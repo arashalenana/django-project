@@ -1,0 +1,15 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Permissions for {{ target.username }} - Dashboard{% endblock %}
+{% block dashboard_content %}
+<h1>Permissions for {{ target.username }}</h1>
+<p>Choose which dashboard sections this account can manage.</p>
+
+<form method="post" class="dashboard-form">
+    {% csrf_token %}
+    <div class="permissions-list">
+        {{ form.permissions }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save Permissions</button>
+    <a href="{% url 'dashboard:settings_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

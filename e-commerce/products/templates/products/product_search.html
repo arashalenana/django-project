@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Search Results - BuyNest{% endblock %}
+{% block content %}
+<h1>Search results for "{{ query }}"</h1>
+<div class="grid grid-products">
+    {% for product in products %}
+        {% include "products/_product_card.html" %}
+    {% empty %}
+        <p>No products matched your search.</p>
+    {% endfor %}
+</div>
+{% endblock %}

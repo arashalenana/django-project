@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_number }} - BuyNest{% endblock %}
+{% block content %}
+<h1>Order {{ order.order_number }}</h1>
+<p>Status: {{ order.get_status_display }}</p>
+<p>Placed on: {{ order.date_created|date:"d M Y, H:i" }}</p>
+<p>Delivery address: {{ order.delivery_address }}</p>
+<table class="orders-table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in order.items.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>KSh {{ item.price_at_purchase }}</td>
+            <td>KSh {{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p class="cart-total">Total: KSh {{ order.total_amount }}</p>
+{% endblock %}

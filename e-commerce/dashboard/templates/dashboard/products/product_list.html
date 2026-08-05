@@ -1,0 +1,92 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Products - Dashboard{% endblock %}
+{% block dashboard_content %}
+<div class="dashboard-toolbar">
+    <h1>Products</h1>
+    {% if perms.products.add_product %}
+    <a href="{% url 'dashboard:product_add' %}" class="btn btn-primary">Add Product</a>
+    {% endif %}
+</div>
+
+<form method="get" class="dashboard-filters">
+    <input type="search" name="q" value="{{ query }}" placeholder="Search by product name...">
+    <select name="category">
+        <option value="">All Categories</option>
+        {% for category in categories %}
+        <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="availability">
+        <option value="">All Availability</option>
+        <option value="available" {% if selected_availability == "available" %}selected{% endif %}>Available</option>
+        <option value="unavailable" {% if selected_availability == "unavailable" %}selected{% endif %}>Unavailable</option>
+    </select>
+    <select name="stock">
+        <option value="">All Stock</option>
+        <option value="in_stock" {% if selected_stock == "in_stock" %}selected{% endif %}>In Stock</option>
+        <option value="out_of_stock" {% if selected_stock == "out_of_stock" %}selected{% endif %}>Out of Stock</option>
+    </select>
+    <button type="submit" class="btn btn-secondary">Filter</button>
+</form>
+
+{% if page_obj.object_list %}
+<div class="table-responsive">
+    <table class="dashboard-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in page_obj %}
+            <tr>
+                <td>
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="dashboard-thumb">
+                    {% else %}
+                    <span class="empty-state">No image</span>
+                    {% endif %}
+                </td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>KSh {{ product.price }}</td>
+                <td>{% if product.discount_price %}KSh {{ product.discount_price }}{% else %}—{% endif %}</td>
+                <td>{{ product.stock_quantity }}</td>
+                <td>
+                    {% if product.is_available %}
+                    <span class="status-badge status-delivered">Available</span>
+                    {% else %}
+                    <span class="status-badge status-cancelled">Unavailable</span>
+                    {% endif %}
+                </td>
+                <td>{{ product.date_created|date:"d M Y" }}</td>
+                <td class="dashboard-actions">
+                    <a href="{{ product.get_absolute_url }}" target="_blank">View</a>
+                    {% if perms.products.change_product %}
+                    <a href="{% url 'dashboard:product_edit' product.pk %}">Edit</a>
+                    {% endif %}
+                    {% if perms.products.delete_product %}
+                    <a href="{% url 'dashboard:product_delete' product.pk %}" class="text-danger">Delete</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include "dashboard/includes/pagination.html" %}
+{% else %}
+<p class="empty-state">No products have been added yet.</p>
+{% if perms.products.add_product %}
+<a href="{% url 'dashboard:product_add' %}" class="btn btn-primary">Add Product</a>
+{% endif %}
+{% endif %}
+{% endblock %}

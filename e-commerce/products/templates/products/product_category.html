@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }} - BuyNest{% endblock %}
+{% block content %}
+<h1>{{ category.name }}</h1>
+{% if category.description %}<p>{{ category.description }}</p>{% endif %}
+<div class="grid grid-products">
+    {% for product in products %}
+        {% include "products/_product_card.html" %}
+    {% empty %}
+        <p>No products in this category yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

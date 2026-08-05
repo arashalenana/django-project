@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Checkout - BuyNest{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+<p class="notice">Please review your order and provide the necessary information to complete your purchase.</p>
+<div class="checkout-layout">
+    <form method="post" class="form-page" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Place Order</button>
+    </form>
+    <div class="checkout-summary">
+        <h2>Order Summary</h2>
+        {% for item in cart_items %}
+        <div class="summary-row">
+            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+            <span>KSh {{ item.subtotal }}</span>
+        </div>
+        {% endfor %}
+        <div class="summary-row summary-total">
+            <span>Total</span>
+            <span>KSh {{ total }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Dashboard Overview - BuyNest{% endblock %}
+
+{% block dashboard_content %}
+<h1>Overview</h1>
+
+<div class="dashboard-cards">
+    {% comment %} <div class="dashboard-card">
+        <span class="dashboard-card-value">{{ total_products }}</span>
+        <span class="dashboard-card-label">Total Products</span>
+    </div>
+    <div class="dashboard-card">
+        <span class="dashboard-card-value">{{ available_products }}</span>
+        <span class="dashboard-card-label">Available Products</span>
+    </div> {% endcomment %}
+    <div class="dashboard-card dashboard-card-warning">
+        <span class="dashboard-card-value">{{ out_of_stock_products }}</span>
+        <span class="dashboard-card-label">Out of Stock</span>
+    </div>
+    {% comment %} <div class="dashboard-card">
+        <span class="dashboard-card-value">{{ total_categories }}</span>
+        <span class="dashboard-card-label">Categories</span>
+    </div>
+    <div class="dashboard-card">
+        <span class="dashboard-card-value">{{ total_profiles }}</span>
+        <span class="dashboard-card-label">User Profiles</span>
+    </div>
+    <div class="dashboard-card">
+        <span class="dashboard-card-value">{{ total_orders }}</span>
+        <span class="dashboard-card-label">Total Orders</span>
+    </div> {% endcomment %}
+    <div class="dashboard-card dashboard-card-warning">
+        <span class="dashboard-card-value">{{ pending_orders }}</span>
+        <span class="dashboard-card-label">Pending Orders</span>
+    </div>
+    <div class="dashboard-card dashboard-card-success">
+        <span class="dashboard-card-value">{{ delivered_orders }}</span>
+        <span class="dashboard-card-label">Delivered Orders</span>
+    </div>
+</div>
+
+<div class="dashboard-quick-actions">
+    {% if perms.products.add_product %}
+    <a href="{% url 'dashboard:product_add' %}" class="btn btn-primary">Add Product</a>
+    {% endif %}
+    {% if perms.products.add_category %}
+    <a href="{% url 'dashboard:category_add' %}" class="btn btn-secondary">Add Category</a>
+    {% endif %}
+    {% if perms.orders.view_order %}
+    <a href="{% url 'dashboard:order_list' %}" class="btn btn-secondary">View Orders</a>
+    {% endif %}
+    {% if perms.authentication.view_user %}
+    <a href="{% url 'dashboard:profile_list' %}" class="btn btn-secondary">View Profiles</a>
+    {% endif %}
+</div>
+
+<div class="dashboard-panels">
+    <section class="dashboard-panel">
+        <h2>Recent Orders</h2>
+        {% if recent_orders %}
+        <div class="table-responsive">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>{{ order.order_number }}</td>
+                        <td>{{ order.full_name }}</td>
+                        <td>KSh {{ order.total_amount }}</td>
+                        <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        </td>
+                        <td>{{ order.date_created|date:"d M Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-state">No orders have been placed yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="dashboard-panel">
+        <h2>Recent Products</h2>
+        {% if recent_products %}
+        <div class="table-responsive">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in recent_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category.name }}</td>
+                        <td>KSh {{ product.display_price }}</td>
+                        <td>{{ product.stock_quantity }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty-state">No products have been added yet.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

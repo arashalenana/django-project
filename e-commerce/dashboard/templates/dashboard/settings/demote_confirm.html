@@ -1,0 +1,15 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Demote {{ target.username }} - Dashboard{% endblock %}
+{% block dashboard_content %}
+<h1>Demote {{ target.username }}</h1>
+<div class="alert alert-warning">
+    This will set <strong>is_staff = False</strong> for this account. They will immediately lose
+    dashboard access and the Dashboard link will no longer appear in their navigation. They will
+    remain a normal registered user — their profile, cart, and order history are not affected.
+</div>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, Demote {{ target.username }}</button>
+    <a href="{% url 'dashboard:settings_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

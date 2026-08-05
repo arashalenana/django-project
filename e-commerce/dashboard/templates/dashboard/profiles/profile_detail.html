@@ -1,0 +1,71 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}{{ profile_user.username }} - Dashboard{% endblock %}
+{% block dashboard_content %}
+<h1>{{ profile_user.username }}</h1>
+
+<div class="dashboard-panel">
+    <h2>Basic Information</h2>
+    <table class="dashboard-detail-table">
+        <tr><th>Full Name</th><td>{{ profile_user.get_full_name|default:"—" }}</td></tr>
+        <tr><th>Email</th><td>{{ profile_user.email }}</td></tr>
+        <tr><th>Phone Number</th><td>{{ profile_user.phone_number|default:"—" }}</td></tr>
+        <tr><th>Address</th><td>{{ profile_user.address|default:"—" }}</td></tr>
+        <tr><th>Date Joined</th><td>{{ profile_user.date_joined|date:"d M Y, H:i" }}</td></tr>
+    </table>
+</div>
+
+<div class="dashboard-panel">
+    <h2>Account Status</h2>
+    <table class="dashboard-detail-table">
+        <tr><th>Staff Status</th><td>{% if profile_user.is_staff %}Yes{% else %}No{% endif %}</td></tr>
+        <tr><th>Admin Status</th><td>{% if profile_user.is_superuser %}Yes{% else %}No{% endif %}</td></tr>
+        <tr><th>Active</th><td>{% if profile_user.is_active %}Yes{% else %}No{% endif %}</td></tr>
+    </table>
+</div>
+
+<div class="dashboard-panel">
+    <h2>Permissions</h2>
+    {% if profile_user.is_superuser %}
+        <p class="empty-state">Admin accounts implicitly have every permission.</p>
+    {% elif profile_user.user_permissions.all %}
+        <ul>
+            {% for perm in profile_user.user_permissions.all %}
+                <li>{{ perm.name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-state">No individual permissions assigned.</p>
+    {% endif %}
+</div>
+
+<div class="dashboard-panel">
+    <h2>Recent Orders</h2>
+    {% if recent_orders %}
+    <div class="table-responsive">
+        <table class="dashboard-table">
+            <thead><tr><th>Order #</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for order in recent_orders %}
+                <tr>
+                    <td>{{ order.order_number }}</td>
+                    <td>KSh {{ order.total_amount }}</td>
+                    <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                    <td>{{ order.date_created|date:"d M Y" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty-state">This user has not placed any orders yet.</p>
+    {% endif %}
+</div>
+
+{% if user.is_superuser %}
+<div class="dashboard-quick-actions">
+    <a href="{% url 'dashboard:settings_permissions' profile_user.pk %}" class="btn btn-secondary">Manage Permissions</a>
+</div>
+{% endif %}
+
+<a href="{% url 'dashboard:profile_list' %}" class="btn btn-secondary">Back to Profiles</a>
+{% endblock %}

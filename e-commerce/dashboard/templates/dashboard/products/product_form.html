@@ -1,0 +1,24 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}{% if is_edit %}Edit Product{% else %}Add Product{% endif %} — Dashboard{% endblock %}
+{% block dashboard_content %}
+<h1>{% if is_edit %}Edit Product: {{ product.name }}{% else %}Add Product{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data" class="dashboard-form" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}
+            {% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+        </div>
+    {% endfor %}
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+    {% endif %}
+    <button type="submit" class="btn btn-primary">
+        {% if is_edit %}Save Changes{% else %}Create Product{% endif %}
+    </button>
+    <a href="{% url 'dashboard:product_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

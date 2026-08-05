@@ -1,0 +1,61 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Account Settings - Dashboard{% endblock %}
+{% block dashboard_content %}
+<h1>Account Settings</h1>
+<p>Manage which accounts can access the dashboard, and what they're allowed to do.</p>
+
+{% if accounts %}
+<div class="table-responsive">
+    <table class="dashboard-table">
+        <thead>
+            <tr>
+                <th>Username</th><th>Full Name</th><th>Email</th><th>Staff</th>
+                <th>Superuser</th><th>Active</th><th>Dashboard Access</th><th>Permissions</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for account in accounts %}
+            <tr>
+                <td>{{ account.username }}</td>
+                <td>{{ account.get_full_name|default:"—" }}</td>
+                <td>{{ account.email }}</td>
+                <td>{% if account.is_staff %}Yes{% else %}No{% endif %}</td>
+                <td>{% if account.is_superuser %}Yes{% else %}No{% endif %}</td>
+                <td>{% if account.is_active %}Yes{% else %}No{% endif %}</td>
+                <td>{% if account.is_staff %}<span class="status-badge status-delivered">Enabled</span>{% else %}<span class="status-badge status-cancelled">Disabled</span>{% endif %}</td>
+                <td>
+                    {% if account.is_superuser %}All 
+                    {% else %}{{ account.user_permissions.count }} assigned{% endif %}
+                </td>
+                <td class="dashboard-actions">
+                    <a href="{% url 'dashboard:profile_detail' account.pk %}">View</a>
+
+                    {% if not account.is_staff %}
+                        <form action="{% url 'dashboard:settings_promote' account.pk %}" method="post" class="inline-form">
+                            {% csrf_token %}
+                            <button type="submit" class="link-button">Promote</button>
+                        </form>
+                    {% elif not account.is_superuser %}
+                        <a href="{% url 'dashboard:settings_demote' account.pk %}" class="text-danger">Demote</a>
+                        <a href="{% url 'dashboard:settings_permissions' account.pk %}">Permissions</a>
+                    {% else %}
+                        <a href="{% url 'dashboard:settings_demote' account.pk %}" class="text-danger">Demote</a>
+                    {% endif %}
+
+                    <form action="{% url 'dashboard:settings_toggle_active' account.pk %}" method="post" class="inline-form"
+                          onsubmit="return confirm('{% if account.is_active %}Deactivate{% else %}Activate{% endif %} {{ account.username }}?');">
+                        {% csrf_token %}
+                        <button type="submit" class="link-button">
+                            {% if account.is_active %}Deactivate{% else %}Activate{% endif %}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="empty-state">No accounts found.</p>
+{% endif %}
+{% endblock %}

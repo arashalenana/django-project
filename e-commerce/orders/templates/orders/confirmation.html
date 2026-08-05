@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed - BuyNest{% endblock %}
+{% block content %}
+<div class="confirmation-page">
+    <h1>Thank you, {{ order.full_name }}!</h1>
+    <p>Your order <strong>{{ order.order_number }}</strong> has been placed successfully.</p>
+    <p>Total: KSh {{ order.total_amount }}</p>
+    <p>We will deliver to: {{ order.delivery_address }}</p>
+    <a href="{% url 'orders:detail' order.order_number %}" class="btn btn-primary">View Order Details</a>
+    <a href="{% url 'products:list' %}" class="btn btn-secondary">Continue Shopping</a>
+</div>
+{% endblock %}

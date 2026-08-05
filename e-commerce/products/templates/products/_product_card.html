@@ -1,0 +1,31 @@
+<div class="product-card">
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% else %}
+        <div class="product-image-placeholder">No image</div>
+    {% endif %}
+    <p class="category-label">{{ product.category.name }}</p>
+    <h3>{{ product.name }}</h3>
+    <p class="price">
+        {% if product.discount_price %}
+            <span class="original-price">KSh {{ product.price }}</span>
+            <span class="discount-price">KSh {{ product.discount_price }}</span>
+        {% else %}
+            KSh {{ product.price }}
+        {% endif %}
+    </p>
+    {% if product.is_in_stock %}
+        <p class="stock in-stock">In stock</p>
+    {% else %}
+        <p class="stock out-of-stock">Out of stock</p>
+    {% endif %}
+    <div class="card-actions">
+        <a href="{{ product.get_absolute_url }}" class="btn btn-secondary">View</a>
+        {% if user.is_authenticated and product.is_in_stock %}
+        <form action="{% url 'cart:add' product.id %}" method="post" class="inline-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+        {% endif %}
+    </div>
+</div>

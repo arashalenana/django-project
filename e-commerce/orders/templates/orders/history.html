@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}My Orders - BuyNest{% endblock %}
+{% block content %}
+<h1>My Orders</h1>
+{% if orders %}
+<table class="orders-table">
+    <thead>
+        <tr>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.date_created|date:"d M Y" }}</td>
+            <td>KSh {{ order.total_amount }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td><a href="{% url 'orders:detail' order.order_number %}">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>You have no orders yet. <a href="{% url 'products:list' %}">Start shopping</a>.</p>
+{% endif %}
+{% endblock %}
