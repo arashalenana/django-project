@@ -5,7 +5,7 @@
         <div class="product-image-placeholder">No image</div>
     {% endif %}
     <p class="category-label">{{ product.category.name }}</p>
-    <h3>{{ product.name }}</h3>
+    <h3 class="truncate">{{ product.name }}</h3>
     <p class="price">
         {% if product.discount_price %}
             <span class="original-price">KSh {{ product.price }}</span>
