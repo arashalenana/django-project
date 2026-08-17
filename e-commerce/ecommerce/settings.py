@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-@y6n)8x1vd$0_8zs51as7j-)v-!fjb%1$lbak$9se_lnylxx)+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.vercel.app', 'onrender.com']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
